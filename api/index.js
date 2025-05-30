@@ -73,8 +73,10 @@ app.get('/auth/callback', async (req, res) => {
 
         const { access_token, id_token } = data;
 
+        let userInfo;
+
         try {
-            const userInfo = await axios.get('https://openidconnect.googleapis.com/v1/userinfo', {
+            userInfo = await axios.get('https://openidconnect.googleapis.com/v1/userinfo', {
                 headers: { Authorization: `Bearer ${access_token}` }
             });
             console.log('userInfo:', userInfo.data);
