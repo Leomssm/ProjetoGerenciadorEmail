@@ -84,11 +84,11 @@ app.get('/auth/callback', async (req, res) => {
         console.log("CHEGUEI AQUIII3");
         const { id, name, email, picture } = userInfo.data;
         console.log("CHEGUEI AQUIII4");
-        const result = await sql`SELECT * FROM usuarios WHERE google_id = ${id}`;
+        const result = await sql`SELECT * FROM usuarios WHERE google_id = ${sub}`;
         if (result.length === 0) {
             await sql`
         INSERT INTO usuarios (google_id, nome, email, foto)
-        VALUES (${id}, ${name}, ${email}, ${picture})
+        VALUES (${sub}, ${name}, ${email}, ${picture})
       `;
         }
         console.log("CHEGUEI AQUIII5");
