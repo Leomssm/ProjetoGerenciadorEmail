@@ -48,13 +48,13 @@ app.get('/auth', (req, res) => {
 });
 
 app.get('/auth/callback', async (req, res) => {
+    console.log("client_id:", process.env.GOOGLE_CLIENT_ID);
+    console.log("client_secret:", process.env.GOOGLE_CLIENT_SECRET);
+    console.log("redirect_uri:", process.env.GOOGLE_REDIRECT_URI);
     const code = req.query.code;
-    if (!code) return res.send("Código não recebido.");
-console.log("Iniciando troca de código...");
-console.log("code:", code);
-console.log("client_id:", process.env.GOOGLE_CLIENT_ID);
-console.log("client_secret:", process.env.GOOGLE_CLIENT_SECRET ? "definido" : "vazio");
-console.log("redirect_uri:", process.env.GOOGLE_REDIRECT_URI);
+    if (!code) {
+        return res.send("Código não recebido.");
+    }
     try {
         const { data } = await axios.post('https://oauth2.googleapis.com/token', new URLSearchParams({
             code,
@@ -68,12 +68,9 @@ console.log("redirect_uri:", process.env.GOOGLE_REDIRECT_URI);
             }
         });
         console.log("CHEGUEI AQUIII");
-console.log("Iniciando troca de código...");
-console.log("code:", code);
-console.log("client_id:", process.env.GOOGLE_CLIENT_ID);
-console.log("client_secret:", process.env.GOOGLE_CLIENT_SECRET ? "definido" : "vazio");
-console.log("redirect_uri:", process.env.GOOGLE_REDIRECT_URI);
 
+        console.log(data);
+        
         const { access_token, id_token } = data;
 
         const userInfo = await axios.get(`https://www.googleapis.com/oauth2/v1/userinfo?alt=json`, {
