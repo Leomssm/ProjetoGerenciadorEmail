@@ -6,7 +6,7 @@ import sql from '../db/db.js';
 import { redirecionarSeAutenticado } from '../utils/redirecionarSeAutenticado.js';
 import { authenticate } from '../middlewares/auth.js';
 
-dotenv.config();
+// dotenv.config();
 
 const app = express();
 
