@@ -87,8 +87,7 @@ app.get('/auth/callback', async (req, res) => {
         console.log("Valor de sub (google_id):", sub);
         let result;
         try {
-            // result = await sql`SELECT * FROM usuarios WHERE google_id = ${sub}`;
-             result = await sql `SELECT 1`;
+            result = await sql`SELECT * FROM usuarios WHERE google_id = ${sub}`;
             console.log("CHEGUEI AQUIII4.5");
         } catch (error) {
             console.error("Erro na query SELECT:", error);
