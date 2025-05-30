@@ -1,13 +1,13 @@
-import dotenv from 'dotenv';
-dotenv.config();
 import express from 'express';
 import cookieParser from 'cookie-parser';
+import dotenv from 'dotenv';
 import axios from 'axios';
 import sql from '../db/db.js';
 import { redirecionarSeAutenticado } from '../utils/redirecionarSeAutenticado.js';
 import { authenticate } from '../middlewares/auth.js';
 
 const app = express();
+dotenv.config();
 
 app.use(cookieParser());
 
