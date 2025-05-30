@@ -3,12 +3,8 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 
-const sql = postgres({
-  host: process.env.HOST,
-  port: process.env.PG_PORT,
-  database: process.env.DATABASE,
-  username: process.env.USER,
-  password: process.env.PASSWORD
+const sql = postgres(process.env.DATABASE_URL, {
+  ssl: 'require'
 });
 
-export default sql
+export default sql;
