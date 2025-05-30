@@ -50,7 +50,11 @@ app.get('/auth', (req, res) => {
 app.get('/auth/callback', async (req, res) => {
     const code = req.query.code;
     if (!code) return res.send("Código não recebido.");
-
+console.log("Iniciando troca de código...");
+console.log("code:", code);
+console.log("client_id:", process.env.GOOGLE_CLIENT_ID);
+console.log("client_secret:", process.env.GOOGLE_CLIENT_SECRET ? "definido" : "vazio");
+console.log("redirect_uri:", process.env.GOOGLE_REDIRECT_URI);
     try {
         const { data } = await axios.post('https://oauth2.googleapis.com/token', new URLSearchParams({
             code,
@@ -63,6 +67,12 @@ app.get('/auth/callback', async (req, res) => {
                 'Content-Type': 'application/x-www-form-urlencoded'
             }
         });
+        console.log("CHEGUEI AQUIII");
+console.log("Iniciando troca de código...");
+console.log("code:", code);
+console.log("client_id:", process.env.GOOGLE_CLIENT_ID);
+console.log("client_secret:", process.env.GOOGLE_CLIENT_SECRET ? "definido" : "vazio");
+console.log("redirect_uri:", process.env.GOOGLE_REDIRECT_URI);
 
         const { access_token, id_token } = data;
 
