@@ -48,9 +48,6 @@ app.get('/auth', (req, res) => {
 });
 
 app.get('/auth/callback', async (req, res) => {
-    console.log("client_id:", process.env.GOOGLE_CLIENT_ID);
-    console.log("client_secret:", process.env.GOOGLE_CLIENT_SECRET);
-    console.log("redirect_uri:", process.env.GOOGLE_REDIRECT_URI);
     const code = req.query.code;
     if (!code) {
         return res.send("Código não recebido.");
@@ -74,7 +71,7 @@ app.get('/auth/callback', async (req, res) => {
         const { access_token, id_token } = data;
 
         let userInfo;
-
+        console.log("CHEGUEI AQUIII2");
         try {
             userInfo = await axios.get('https://openidconnect.googleapis.com/v1/userinfo', {
                 headers: { Authorization: `Bearer ${access_token}` }
@@ -84,9 +81,9 @@ app.get('/auth/callback', async (req, res) => {
             console.error('Erro ao buscar userInfo:', error.response?.data || error.message || error);
             throw error;
         }
-
+        console.log("CHEGUEI AQUIII3");
         const { id, name, email, picture } = userInfo.data;
-
+        console.log("CHEGUEI AQUIII4");
         const result = await sql`SELECT * FROM usuarios WHERE google_id = ${id}`;
         if (result.length === 0) {
             await sql`
@@ -94,12 +91,12 @@ app.get('/auth/callback', async (req, res) => {
         VALUES (${id}, ${name}, ${email}, ${picture})
       `;
         }
-
+        console.log("CHEGUEI AQUIII5");
         res.cookie("session", id_token, {
             httpOnly: true,
             secure: true,
         });
-
+        console.log("CHEGUEI AQUIII6");
         res.redirect('/home');
     } catch (error) {
         console.error("Erro ao autenticar:", error?.response?.data || error.message || error);
