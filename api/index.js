@@ -82,7 +82,7 @@ app.get('/auth/callback', async (req, res) => {
             throw error;
         }
         console.log("CHEGUEI AQUIII3");
-        const { id, name, email, picture } = userInfo.data;
+        const { sub, name, email, picture } = userInfo.data;
         console.log("CHEGUEI AQUIII4");
         const result = await sql`SELECT * FROM usuarios WHERE google_id = ${sub}`;
         if (result.length === 0) {
