@@ -7,8 +7,6 @@ import sql from '../db/db.js';
 import { redirecionarSeAutenticado } from '../utils/redirecionarSeAutenticado.js';
 import { authenticate } from '../middlewares/auth.js';
 
-
-
 const app = express();
 
 app.use(cookieParser());
