@@ -85,18 +85,24 @@ app.get('/auth/callback', async (req, res) => {
         const { sub, name, email, picture } = userInfo.data;
         console.log("CHEGUEI AQUIII4");
         const result = await sql`SELECT * FROM usuarios WHERE google_id = ${sub}`;
-        if (result.length === 0) {
-            await sql`
-        INSERT INTO usuarios (google_id, nome, email, foto)
-        VALUES (${sub}, ${name}, ${email}, ${picture})
-      `;
-        }
         console.log("CHEGUEI AQUIII5");
+        if (result.length === 0) {
+            try {
+                await sql`
+      INSERT INTO usuarios (google_id, nome, email, foto)
+      VALUES (${sub}, ${name}, ${email}, ${picture})
+    `;
+            } catch (err) {
+                console.error("Erro ao inserir usuário:", err);
+                return res.status(500).send("Erro ao inserir usuário");
+            }
+        }
+        console.log("CHEGUEI AQUIII6");
         res.cookie("session", id_token, {
             httpOnly: true,
             secure: true,
         });
-        console.log("CHEGUEI AQUIII6");
+        console.log("CHEGUEI AQUIII7");
         res.redirect('/home');
     } catch (error) {
         console.error("Erro ao autenticar:", error?.response?.data || error.message || error);
