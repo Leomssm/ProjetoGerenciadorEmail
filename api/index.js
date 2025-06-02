@@ -21,7 +21,7 @@ app.use(cookieParser());
 //*** ROTAS ***//
 
 app.get('/', (req, res) => {
-    res.send('<h1>Bem-vindo</h1>');
+    res.render('index');
 });
 
 app.get('/login', redirecionarSeAutenticado, (req, res) => {
@@ -29,7 +29,6 @@ app.get('/login', redirecionarSeAutenticado, (req, res) => {
 });
 
 app.get('/home', authenticate, (req, res) => {
-    //res.send("<h1>Dashboard</h1><p>Você está logado como:</p><p><button>Sair</button></p>");
     res.render('home');
 });
 
@@ -45,14 +44,6 @@ app.get('/auth/google', (req, res) => {
         });
 
     res.redirect(redirect_uri);
-});
-
-app.get('/auth', (req, res) => {
-    try {
-        res.send("/auth");
-    } catch (error) {
-        return res.json({ error });
-    }
 });
 
 app.get('/auth/callback', async (req, res) => {
@@ -118,14 +109,6 @@ app.get('/auth/callback', async (req, res) => {
         console.error("Erro ao autenticar:", error?.response?.data || error.message || error);
         res.status(500).send("Erro na autenticação com o Google");
     }
-});
-
-app.get('/user', authenticate, (req, res) => {
-    const sessionCookie = req.cookies.session;
-    if (!sessionCookie) {
-        return res.send('Você não está logado. Vá até <a href="/">/</a>');
-    }
-    res.send(`Token salvo no cookie: ${sessionCookie}`);
 });
 
 app.get('/logout', (req, res) => {
