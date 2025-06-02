@@ -9,6 +9,13 @@ import { authenticate } from '../middlewares/auth.js';
 const app = express();
 dotenv.config();
 
+import path from 'path';
+import { fileURLToPath } from 'url';
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+app.set('views', path.join(__dirname, '../views'));
+app.set('view engine', 'ejs');
+
 app.use(cookieParser());
 
 //*** ROTAS ***//
@@ -18,7 +25,8 @@ app.get('/', (req, res) => {
 });
 
 app.get('/login', redirecionarSeAutenticado, (req, res) => {
-    res.send('<a href="/auth/google">Login with Google</a>');
+    //res.send('<a href="/auth/google">Login with Google</a>');
+    res.render('login');
 });
 
 app.get('/home', authenticate, (req, res) => {
