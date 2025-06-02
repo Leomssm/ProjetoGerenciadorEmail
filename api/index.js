@@ -98,7 +98,6 @@ app.get('/auth/callback', async (req, res) => {
             userInfo = await axios.get('https://openidconnect.googleapis.com/v1/userinfo', {
                 headers: { Authorization: `Bearer ${access_token}` }
             });
-            console.log('userInfo:', userInfo.data);
         } catch (error) {
             console.error('Erro ao buscar userInfo:', error.response?.data || error.message || error);
             throw error;

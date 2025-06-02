@@ -4,19 +4,42 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
+        <style>
+        body {
+            font-family: sans-serif;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin: 2rem;
+        }
+        .email {
+            padding: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background: #f9f9f9;
+        }
+        .email h3 {
+            margin: 0 0 0.5rem;
+        }
+        .email p {
+            margin: 0.25rem 0;
+        }
+    </style>
 </head>
 <body>
   <h1>Bem-vindo, <%= nome %></h1>
   <h2>Seus e-mails:</h2>
-  <ul>
-    <% if (emails.length === 0) { %>
-      <li>Nenhum e-mail encontrado.</li>
-    <% } else { %>
-      <% emails.forEach(email => { %>
-        <li><%= email.id %></li>
-      <% }) %>
-    <% } %>
-  </ul>
+  <div class="grid">
+        <% emails.forEach(email => { %>
+            <div class="email">
+                <h3><%= email.subject %></h3>
+                <p><strong>De:</strong> <%= email.from %></p>
+                <p><%= email.snippet %></p>
+            </div>
+        <% }); %>
+    </div>
     <p><a href="/logout"><button>Sair</button></a></p>
 </body>
 </html>
