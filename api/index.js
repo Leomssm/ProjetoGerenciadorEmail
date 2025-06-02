@@ -25,12 +25,12 @@ app.get('/', (req, res) => {
 });
 
 app.get('/login', redirecionarSeAutenticado, (req, res) => {
-    //res.send('<a href="/auth/google">Login with Google</a>');
     res.render('login');
 });
 
 app.get('/home', authenticate, (req, res) => {
-    res.send("<h1>Dashboard</h1><p>Você está logado como:</p><p><button>Sair</button></p>");
+    //res.send("<h1>Dashboard</h1><p>Você está logado como:</p><p><button>Sair</button></p>");
+    res.render('home');
 });
 
 app.get('/auth/google', (req, res) => {
@@ -72,14 +72,10 @@ app.get('/auth/callback', async (req, res) => {
                 'Content-Type': 'application/x-www-form-urlencoded'
             }
         });
-        console.log("CHEGUEI AQUIII");
-
-        console.log(data);
 
         const { access_token, id_token } = data;
 
         let userInfo;
-        console.log("CHEGUEI AQUIII2");
         try {
             userInfo = await axios.get('https://openidconnect.googleapis.com/v1/userinfo', {
                 headers: { Authorization: `Bearer ${access_token}` }
@@ -89,20 +85,17 @@ app.get('/auth/callback', async (req, res) => {
             console.error('Erro ao buscar userInfo:', error.response?.data || error.message || error);
             throw error;
         }
-        console.log("CHEGUEI AQUIII3");
+
         const { sub, name, email, picture } = userInfo.data;
-        console.log("CHEGUEI AQUIII4");
-        console.log("Valor de sub (google_id):", sub);
+
         let result;
         try {
             result = await sql`SELECT * FROM usuarios WHERE google_id = ${sub}`;
-            console.log("CHEGUEI AQUIII4.5");
         } catch (error) {
             console.error("Erro na query SELECT:", error);
             return res.status(500).send("Erro no banco ao buscar usuário.");
         }
 
-        console.log("CHEGUEI AQUIII5");
         if (result.length === 0) {
             try {
                 await sql`
@@ -114,12 +107,12 @@ app.get('/auth/callback', async (req, res) => {
                 return res.status(500).send("Erro ao inserir usuário");
             }
         }
-        console.log("CHEGUEI AQUIII6");
+
         res.cookie("session", id_token, {
             httpOnly: true,
             secure: true,
         });
-        console.log("CHEGUEI AQUIII7");
+
         res.redirect('/home');
     } catch (error) {
         console.error("Erro ao autenticar:", error?.response?.data || error.message || error);
