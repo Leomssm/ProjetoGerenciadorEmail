@@ -6,8 +6,17 @@
     <title>Home</title>
 </head>
 <body>
-    <h1>Dashboard</h1>
-    <p>Você está logado como:</p>
+  <h1>Bem-vindo, <%= nome %></h1>
+  <h2>Seus e-mails:</h2>
+  <ul>
+    <% if (emails.length === 0) { %>
+      <li>Nenhum e-mail encontrado.</li>
+    <% } else { %>
+      <% emails.forEach(email => { %>
+        <li><%= email.id %></li>
+      <% }) %>
+    <% } %>
+  </ul>
     <p><a href="/logout"><button>Sair</button></a></p>
 </body>
 </html>

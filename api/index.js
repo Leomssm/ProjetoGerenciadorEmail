@@ -5,6 +5,8 @@ import axios from 'axios';
 import sql from '../db/db.js';
 import { redirecionarSeAutenticado } from '../utils/redirecionarSeAutenticado.js';
 import { authenticate } from '../middlewares/auth.js';
+import { getMails } from '../controllers/controllers.js';
+import { oAuth2Client } from '../controllers/googleAuth.js';
 
 const app = express();
 dotenv.config();
@@ -28,8 +30,28 @@ app.get('/login', redirecionarSeAutenticado, (req, res) => {
     res.render('login');
 });
 
-app.get('/home', authenticate, (req, res) => {
-    res.render('home');
+app.get('/home', authenticate, async (req, res) => {
+  const sessionToken = req.cookies.session;
+  const accessToken = req.cookies.access_token;
+
+  if (!sessionToken || !accessToken) {
+    return res.redirect('/login');
+  }
+
+  try {
+    oAuth2Client.setCredentials({ access_token: accessToken });
+
+    const userEmail = req.user.email;
+    const emails = await getMails(userEmail);
+
+    res.render('home', {
+      nome: req.user.nome,
+      emails: emails
+    });
+  } catch (error) {
+    console.error('Erro ao carregar a home:', error);
+    res.status(500).send('Erro ao carregar a página.');
+  }
 });
 
 app.get('/auth/google', (req, res) => {
@@ -38,7 +60,7 @@ app.get('/auth/google', (req, res) => {
             client_id: process.env.GOOGLE_CLIENT_ID,
             redirect_uri: process.env.GOOGLE_REDIRECT_URI,
             response_type: 'code',
-            scope: 'openid email profile',
+            scope: 'openid email profile https://www.googleapis.com/auth/gmail.readonly',
             access_type: 'offline',
             prompt: 'consent'
         });
@@ -100,6 +122,11 @@ app.get('/auth/callback', async (req, res) => {
         }
 
         res.cookie("session", id_token, {
+            httpOnly: true,
+            secure: true,
+        });
+
+        res.cookie("access_token", access_token, {
             httpOnly: true,
             secure: true,
         });
