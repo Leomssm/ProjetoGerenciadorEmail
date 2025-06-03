@@ -5,7 +5,6 @@ export async function getMails(email) {
   try {
     const { token } = await oAuth2Client.getAccessToken();
 
-    // 1. Buscar as threads
     const threadsResponse = await axios({
       method: 'get',
       url: `https://gmail.googleapis.com/gmail/v1/users/${email}/threads?maxResults=25`,
@@ -18,7 +17,6 @@ export async function getMails(email) {
 
     const emails = [];
 
-    // 2. Para cada thread, buscar a mensagem (com headers)
     for (const thread of threads) {
       const threadId = thread.id;
 
