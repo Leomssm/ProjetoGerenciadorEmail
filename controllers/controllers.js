@@ -14,7 +14,7 @@ export async function getMails(email) {
     });
 
     const threads = threadsResponse.data.threads || [];
-
+    console.log(threads);
     const emails = [];
 
     for (const thread of threads) {
