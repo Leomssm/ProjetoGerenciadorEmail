@@ -32,7 +32,7 @@ export async function getMails(email) {
       if (!message) continue;
 
       const headers = message.payload.headers;
-
+      console.log(headers);
       const subject = headers.find(h => h.name === 'Subject')?.value || '(Sem Assunto)';
       const from = headers.find(h => h.name === 'From')?.value || '(Remetente desconhecido)';
       const snippet = message.snippet || '';
